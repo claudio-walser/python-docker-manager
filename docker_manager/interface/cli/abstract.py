@@ -17,9 +17,6 @@ class BaseCommand(object):
 
     def __init__(self):
         self.config.load()
-        config = self.config.get()
-        if 'projects' not in config:
-            self.interface.writeOut('No projects found in your config')
         try:
             self.projects = Projects()
         except NoProjectsFoundException:
