@@ -5,12 +5,12 @@ from simpcli import Interface as CliInterface
 class Compose (object):
 
   command = CliCommand(True)
-  composeCommand = 'docker-compose'
+  binary = 'docker-compose'
 
   def comopose(self, command, service = ''):
     if service == 'all-services':
       service = ''
-    return self.command.execute('%s %s %s' % (self.composeCommand, command, service))
+    return self.command.execute('%s %s %s' % (self.binary, command, service))
 
   def start(self):
     return self.comopose('up -d')

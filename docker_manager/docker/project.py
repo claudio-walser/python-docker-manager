@@ -19,5 +19,9 @@ class Project (object):
     def getPath(self):
     	return self.path
 
+    def hasDockerSync(self):
+        syncFile = '%s/docker-sync.yml' % (path)
+        return os.isfile(syncFile)
+
     def changeWorkingDirectory(self):
         os.chdir(self.path)
