@@ -119,3 +119,8 @@ class ManagerConfig(BaseConfig):
                 self.composerCongigs[composerConfigfile] = config
             except ConfigException:
                 pass
+
+class ComposeConfig(Yaml):
+
+    def debug(self):
+        pprint(self.yaml)

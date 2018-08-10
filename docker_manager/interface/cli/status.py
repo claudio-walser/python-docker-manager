@@ -12,8 +12,8 @@ class Status(BaseCommand):
         return True
 
     def status(self, project):
-        self.interface.writeOut('%s%s:%s' % (self.interface.BOLD, project, self.interface.ENDC))            
+        self.interface.writeOut('%s%s:%s' % (self.interface.BOLD, project, self.interface.ENDC))
         #self.interface.bold(project)
         project = self.projects.getProject(project)
-        project.changeWorkingDirectory()            
+        project.changeWorkingDirectory()
         self.compose.status()

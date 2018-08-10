@@ -1,11 +1,23 @@
+import os
+
 from simpcli import Command as CliCommand
-from simpcli import Interface as CliInterface
+
+from docker_manager.config import ComposeConfig
 
 
 class Compose (object):
 
   command = CliCommand(True)
   binary = 'docker-compose'
+  dockerBinary = 'docker'
+
+  def __init__(self):
+    composeFile = './docker-compose.yml'
+    if not os.path.isfile(composeFile):
+        raise NoDockerComposeFileException("No docker-compose.yaml found in %s!" % path)
+    composeConfig = ComposeConfig()
+    composeConfig.load(composeFile)
+    composeConfig.debug()
 
   def comopose(self, command, service = ''):
     if service == 'all-services':
