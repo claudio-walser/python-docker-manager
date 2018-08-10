@@ -55,8 +55,6 @@ class BaseConfig:
         self.yaml.write(self.filename, self.config)
         return True
 
-    def get(self):
-        return self.yaml
 
 
 class ManagerConfig(BaseConfig):
@@ -120,7 +118,8 @@ class ManagerConfig(BaseConfig):
             except ConfigException:
                 pass
 
-class ComposeConfig(Yaml):
+class ComposeConfig(BaseConfig):
+    filename = './docker-compose.yml'
 
     def debug(self):
         pprint(self.yaml)
