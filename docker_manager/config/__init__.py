@@ -55,8 +55,8 @@ class BaseConfig:
         self.yaml.write(self.filename, self.config)
         return True
 
-    def debug(self):
-        pprint(self.config)
+    def get(self):
+        return self.yaml
 
 
 class ManagerConfig(BaseConfig):
