@@ -1,4 +1,7 @@
+from docker_manager.docker.compose import Compose
+
 from docker_manager.interface.cli.abstract import BaseCommand
+
 
 class Status(BaseCommand):
 
@@ -16,4 +19,5 @@ class Status(BaseCommand):
         #self.interface.bold(project)
         project = self.projects.getProject(project)
         project.changeWorkingDirectory()
-        self.compose.status()
+        compose = Compose()
+        compose.status()

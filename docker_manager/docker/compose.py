@@ -4,6 +4,8 @@ from simpcli import Command as CliCommand
 
 from docker_manager.config import ComposeConfig
 
+from docker_manager.exceptions import NoDockerComposeFileException
+
 from pprint import pprint
 
 
@@ -17,7 +19,7 @@ class Compose (object):
   def __init__(self):
     composeFile = './docker-compose.yml'
     if not os.path.isfile(composeFile):
-        raise NoDockerComposeFileException("No docker-compose.yaml found in %s!" % path)
+        raise NoDockerComposeFileException("No docker-compose.yaml found in %s!" % os.getcwd())
     self.composeConfig = ComposeConfig()
     self.composeConfig.load()
 
