@@ -13,6 +13,9 @@ class BaseCommand(object):
     config = ManagerConfig()
     projects = None
 
+    def bold(self, string):
+        self.interface.writeOut('%s%s%s' % (self.interface.BOLD, string, self.interface.ENDC))
+
     def __init__(self):
         self.config.load()
         try:

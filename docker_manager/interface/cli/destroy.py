@@ -16,7 +16,7 @@ class Destroy(BaseCommand):
         return True
 
     def destroy(self, project):
-        self.interface.writeOut('%s%s:%s' % (self.interface.BOLD, project, self.interface.ENDC))
+        self.bold(project)
         #self.interface.bold(project)
         project = self.projects.getProject(project)
         project.changeWorkingDirectory()
