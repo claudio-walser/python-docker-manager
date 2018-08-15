@@ -2,7 +2,6 @@ import os
 
 from docker_manager.config import ManagerConfig
 from docker_manager.docker.project import Project
-#from docker_manager.exceptions import NoProjectsFoundException
 from docker_manager.exceptions import ProjectNotFoundException
 from docker_manager.exceptions import ProjectAlreadyAddedException
 from docker_manager.exceptions import NoDockerComposeFileException
