@@ -22,10 +22,10 @@ class Status(BaseCommand):
         self.bold(statusHeaderString)
 
     def status(self, project):
+        self.interface.writeOut('')
         self.bold(project)
         self.statusHeader()
 
-        #self.interface.bold(project)
         project = self.projects.getProject(project)
         project.changeWorkingDirectory()
         compose = Compose()
@@ -37,5 +37,3 @@ class Status(BaseCommand):
             statusString += str(container.isCreated()).ljust(10)
             statusString += str(container.isRunning()).ljust(10)
             self.interface.writeOut(statusString)
-        self.interface.writeOut('')
-        #compose.status()

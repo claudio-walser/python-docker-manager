@@ -51,8 +51,8 @@ class Compose (object):
     self.kill()
     return self.comopose('rm -f')
 
-  def update(self):
-    return self.comopose('update')
+  def pull(self):
+    return self.comopose('pull')
 
   def restart(self):
     output = ''
