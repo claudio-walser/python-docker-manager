@@ -20,4 +20,6 @@ class Status(BaseCommand):
         project = self.projects.getProject(project)
         project.changeWorkingDirectory()
         compose = Compose()
-        compose.status()
+        for containerName in compose.getContainerNames():
+            print(containerName)
+        #compose.status()

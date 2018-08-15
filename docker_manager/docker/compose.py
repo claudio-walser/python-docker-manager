@@ -41,11 +41,14 @@ class Compose (object):
   def stop(self):
     return self.comopose('stop')
 
+  def kill(self):
+    return self.comopose('kill')
+
   def status(self):
     return self.comopose('top')
 
   def destroy(self):
-    self.stop()
+    self.kill()
     return self.comopose('rm -f')
 
   def update(self):
@@ -57,7 +60,24 @@ class Compose (object):
     output += self.start()
     return output
 
+  def predictName(self, serviceIndex, service, scale = 1):
+    projectName = self.name = os.path.basename(os.getcwd())
+
+    return '%s_%s_%i' % (projectName, serviceIndex, scale)
+
   def getContainerNames(self):
-    # docker-compose ps -q $service
-    # docker inspect --format='{{.Name}}' d487a433132b921eca0d94dc04dbca6af0a7bfbc8d29c511b256ffa795fa88c9
-    raise Exception('Not implemented yet')
+    config = self.composeConfig.get()
+    containerNames = []
+    if 'services' in config:
+      for serviceIndex in config['services']:
+        service = config['services'][serviceIndex]
+        if 'container_name' in service:
+          containerNames.append(service['container_name'])
+        else:
+          if 'scale' in service:
+            for scale in range(service['scale']):
+              scale += 1
+              containerNames.append(self.predictName(serviceIndex, service, scale))
+          else:
+            containerNames.append(self.predictName(serviceIndex, service))
+    return containerNames
