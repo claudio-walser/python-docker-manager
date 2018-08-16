@@ -38,19 +38,22 @@ class Projects (object):
         return self.projects[project]
 
     def add(self, path):
-        composeFile = '%s/docker-compose.yml' % (path)
-        if not os.path.isfile(composeFile):
-            raise NoDockerComposeFileException("No docker-compose.yaml found in %s!" % path)
-
-        projectName = os.path.basename(path)
-
-        if projectName in self.projects:
+        project = Project(path)
+        if project.getName() in self.projects:
             raise ProjectAlreadyAddedException('Project %s was already added earlier.' % (path))
 
-        self.projects[projectName] = path
-        
-        self.config.setProjects(self.projects)
+        self.projects[project.getName()] = project
+
+        self.config.setProjects(self.getPlainProjects())
         return self.config.write()
+
+    def getPlainProjects(self):
+        projects = {}
+        for project  in self.projects:
+            project = self.projects[project]
+            projects[project.getName()] = project.getPath()
+
+        return projects
 
     def remove(self, path):
         pass

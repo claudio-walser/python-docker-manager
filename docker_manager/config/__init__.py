@@ -69,42 +69,6 @@ class ManagerConfig(BaseConfig):
         self.load()
         self.config['projects'] = projects
 
-    def addProject(self, path: str):
-        # todo: check if a docker-compose.yml exists
-        # otherwise throw a specific exception
-        composeFile = '%s/docker-compose.yml' % (path)
-        if not os.path.isfile(composeFile):
-            raise NoDockerComposeFileException("No docker-compose.yaml found in %s!" % path)
-
-        projectName = os.path.basename(path)
-
-        if 'projects' not in self.config or type(self.config['projects']) != dict:
-            self.config['projects'] = {}
-
-        if projectName in self.config['projects']:
-            raise ProjectAlreadyAddedException('Project %s was already added earlier.' % (path))
-
-        self.config['projects'][projectName] = path
-        return self.write()
-
-    def removeProject(self, path: str):
-        # todo: check if a docker-compose.yml exists
-        # otherwise throw a specific exception
-        composeFile = '%s/docker-compose.yml' % (path)
-        if not os.path.isfile(composeFile):
-            raise NoDockerComposeFileException("No docker-compose.yaml found in %s!" % path)
-
-        projectName = os.path.basename(path)
-
-        if 'projects' not in self.config \
-        or type(self.config['projects']) != dict \
-        or projectName not in self.config['projects'] \
-        or self.config['projects'][projectName] != path:
-            raise ProjectNotFoundException('Project %s was not found.' % (path))
-
-        del self.config['projects'][projectName]
-        return self.write()
-
     def loadComposerConfigs(self):
         if 'projects' not in self.config or type(self.config['projects']) != dict:
             raise ConfigException('No projects specified in %' % (self.filename))
