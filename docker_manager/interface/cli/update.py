@@ -15,6 +15,7 @@ class Update(BaseCommand):
         return True
 
     def update(self, project):
+        self.interface.writeOut('')
         self.bold(project)
         #self.interface.bold(project)
         project = self.projects.getProject(project)

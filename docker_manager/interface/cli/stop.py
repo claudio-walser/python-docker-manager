@@ -16,6 +16,7 @@ class Stop(BaseCommand):
         return True
 
     def stop(self, project):
+        self.interface.writeOut('')
         self.bold(project)
         #self.interface.bold(project)
         project = self.projects.getProject(project)
