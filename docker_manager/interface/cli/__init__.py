@@ -11,6 +11,7 @@ from docker_manager.interface.cli.destroy import Destroy
 from docker_manager.interface.cli.init import Init
 from docker_manager.interface.cli.deinit import Deinit
 from docker_manager.interface.cli.projects import Projects
+from docker_manager.interface.cli.pull import Pull
 from docker_manager.interface.cli.changedirectory import ChangeDirectory
 
 from docker_manager.exceptions import DockerManagerException
@@ -30,6 +31,7 @@ class Cli():
         "init",
         "deinit",
         "projects",
+        "pull",
         "cd"
     ]
 
@@ -55,6 +57,8 @@ class Cli():
             return Deinit()
         if command == 'projects':
             return Projects()
+        if command == 'pull':
+            return Pull()
         if command == 'cd':
             return ChangeDirectory()
 

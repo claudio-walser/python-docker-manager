@@ -6,8 +6,6 @@ from docker_manager.config import ComposeConfig
 
 from docker_manager.exceptions import NoDockerComposeFileException
 
-from pprint import pprint
-
 
 class Compose (object):
 

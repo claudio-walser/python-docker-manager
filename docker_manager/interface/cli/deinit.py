@@ -10,7 +10,7 @@ class Deinit(BaseCommand):
     def run(self, project: str, services: str) -> bool:
         currentFolder = os.getcwd()
         try:
-            self.config.removeProject(currentFolder)
+            self.projects.remove(currentFolder)
             self.interface.ok(
                 'Path %s successfully removed to your projects.' % (
                     currentFolder

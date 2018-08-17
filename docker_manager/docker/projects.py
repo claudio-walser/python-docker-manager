@@ -56,7 +56,11 @@ class Projects (object):
         return projects
 
     def remove(self, path):
-        pass
+        project = Project(path)
+        self.checkProject(project.getName())
+        del self.projects[project.getName()]
+        self.config.setProjects(self.getPlainProjects())
+        return self.config.write()
 
     def checkProject(self, project):
         if project not in self.projects:
