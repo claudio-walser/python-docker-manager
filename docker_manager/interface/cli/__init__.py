@@ -1,5 +1,7 @@
 import sys
 import simpcli
+import os
+import glob
 
 from docker_manager.interface.cli.abstract import BaseCommand
 from docker_manager.interface.cli.status import Status
@@ -20,6 +22,8 @@ from docker_manager.exceptions import DockerManagerException
 class Cli():
 
     interface = simpcli.Interface()
+    command = simpcli.Command(True)
+    extraCommandsDirectory = './docker-manager'
 
     commands = [
         "status",
@@ -37,6 +41,12 @@ class Cli():
 
     def getAvailableCommands(self):
         return self.commands
+
+    def executeExtraCommand(self, command: str):
+        files = glob.glob('%s/%s/%s*' % (os.getcwd(), self.extraCommandsDirectory, command))
+        for file in files:
+            self.command.execute(file)
+
 
     def instantiateCommand(self, command: str) -> BaseCommand:
         if command == 'status':
@@ -84,6 +94,7 @@ class Cli():
 
         try:
             commandObject.run(project, service)
+            self.executeExtraCommand(command)
         # catch cli execution errors here
         except (DockerManagerException, simpcli.CliException) as e:
             self.interface.error(format(e))
