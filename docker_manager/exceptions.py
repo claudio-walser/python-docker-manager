@@ -17,3 +17,6 @@ class ProjectNotFoundException(Exception):
 
 class DockerManagerException(Exception):
     pass
+
+class NoExtraCommandFoundException(Exception):
+	pass

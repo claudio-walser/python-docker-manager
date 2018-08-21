@@ -1,7 +1,5 @@
 import sys
 import simpcli
-import os
-import glob
 
 from docker_manager.interface.cli.abstract import BaseCommand
 from docker_manager.interface.cli.status import Status
@@ -15,15 +13,16 @@ from docker_manager.interface.cli.deinit import Deinit
 from docker_manager.interface.cli.projects import Projects
 from docker_manager.interface.cli.pull import Pull
 from docker_manager.interface.cli.changedirectory import ChangeDirectory
+from docker_manager.interface.cli.extracommand import ExtraCommand
 
 from docker_manager.exceptions import DockerManagerException
+from docker_manager.exceptions import NoExtraCommandFoundException
 
 
 class Cli():
 
     interface = simpcli.Interface()
     command = simpcli.Command(True)
-    extraCommandsDirectory = './docker-manager'
 
     commands = [
         "status",
@@ -41,11 +40,6 @@ class Cli():
 
     def getAvailableCommands(self):
         return self.commands
-
-    def executeExtraCommand(self, command: str):
-        files = glob.glob('%s/%s/%s*' % (os.getcwd(), self.extraCommandsDirectory, command))
-        for file in files:
-            self.command.execute(file)
 
 
     def instantiateCommand(self, command: str) -> BaseCommand:
@@ -75,27 +69,36 @@ class Cli():
         raise DockerManagerException('Command "%s" not found!' % (command))
 
     def dispatch(self, command: str, project: str, service: str):
+        self.interface.header('docker-manager %s' % (command))
+        extraCommandObject = ExtraCommand(command)
+
         try:
             commandObject = self.instantiateCommand(command)
+
         except Exception as e:
-            raise e
-            errorMessage = 'Command %s failed,' + \
-                ' Exception was: %s'
+            try:
+                extraCommandObject.run(project, service)
+            except NoExtraCommandFoundException:
+                errorMessage = 'Command %s failed,' + \
+                    ' Exception was: %s'
 
-            self.interface.error(
-                errorMessage % (
-                    command,
-                    e
+                self.interface.error(
+                    errorMessage % (
+                        command,
+                        e
+                    )
                 )
-            )
-            sys.exit(1)
-
-        self.interface.header('docker-manager %s' % (command))
+                sys.exit(1)
 
         try:
             commandObject.run(project, service)
-            self.executeExtraCommand(command)
+            try:
+                extraCommandObject.run(project, service)
+            except NoExtraCommandFoundException:
+                pass
         # catch cli execution errors here
+        except UnboundLocalError:
+            pass
         except (DockerManagerException, simpcli.CliException) as e:
             self.interface.error(format(e))
 

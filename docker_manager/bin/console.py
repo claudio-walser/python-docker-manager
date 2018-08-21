@@ -22,8 +22,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument(
     "command",
     help="What command do you want to execute?",
-    type=str,
-    choices=cli.getAvailableCommands()
+    type=str#,
+    #choices=cli.getAvailableCommands()
 )
 
 parser.add_argument(
