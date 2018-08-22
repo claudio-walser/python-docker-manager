@@ -17,6 +17,14 @@ class ExtraCommand(BaseCommand):
         super(ExtraCommand, self).__init__()
 
     def run(self, project: str, services: str) -> bool:
+        if project == 'all-projects':
+            for project in self.projects.getAll():
+                self.extraCommand(project)
+        else:
+            self.extraCommand(project)
+        return True
+
+    def extraCommand(self, project: str):
         project = self.projects.getProject(project)
         project.changeWorkingDirectory()
 
