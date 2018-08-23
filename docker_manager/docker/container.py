@@ -8,6 +8,8 @@ class Container(object):
 
   id = None
   name = None
+  serviceName = None
+  serviceConfig = None
   running = False
   created = False
   settings = {}
@@ -17,10 +19,12 @@ class Container(object):
   waitedForIp = 0
   waitForIpMax = 20
 
-  def __init__(self, name):
+  def __init__(self, name, serviceName, serviceConfig):
     self.name = name
-    self.getId()
-    if self.id is not None:
+    self.serviceName = serviceName
+    self.serviceConfig = serviceConfig
+    id = self.getId()
+    if id is not None:
       self.created = True
       self.inspect()
 
@@ -33,6 +37,12 @@ class Container(object):
 
   def getName(self):
     return self.name
+
+  def getServiceName(self):
+    return self.serviceName
+
+  def getServiceConfig(self):
+    return self.serviceConfig
 
   def getIpAddress(self):
     if self.running:

@@ -1,5 +1,4 @@
 from docker_manager.docker.compose import Compose
-from docker_manager.docker.container import Container
 from docker_manager.interface.cli.abstract import BaseCommand
 
 
@@ -29,8 +28,7 @@ class Status(BaseCommand):
         project = self.projects.getProject(project)
         project.changeWorkingDirectory()
         compose = Compose()
-        for containerName in compose.getContainerNames():
-            container = Container(containerName)
+        for container in compose.getContainers():
             statusString = str(container.getId()).ljust(20)
             statusString += str(container.name).ljust(40)
             statusString += str(container.getIpAddress()).ljust(15)

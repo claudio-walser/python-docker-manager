@@ -25,3 +25,5 @@ class Start(BaseCommand):
         if project.hasDockerSync():
             sync = Sync()
             sync.start()
+
+        self.runPlugins(project)

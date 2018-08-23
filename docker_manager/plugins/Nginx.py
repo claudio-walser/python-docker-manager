@@ -52,13 +52,13 @@ class Nginx(BasePlugin):
 
 
   # callable methods
-  def start(self, project, service):
+  def start(self):
     # should optimize and do that only on creation of the container
     #self.writeUpstreamConfig()
     print('start nginx plugin')
     pass
 
-  def destroy(self, project, service):
+  def destroy(self):
     #self.removeUpstreamConfig()
     print('destroy nginx plugin')
     pass

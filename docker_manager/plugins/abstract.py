@@ -6,9 +6,11 @@ class BasePlugin(object):
   settings = None
 
   #def __init__(self, container):
-  def __init__(self):
-    pass
-    #self.container = container
-    #self.name = self.container.getName()
-    #self.settings = self.container.getSettings()
-
+  def run(self, command, container):
+    if hasattr(self, command):
+        self.container = container
+        print(self.container.getName())
+        print(self.container.getServiceName())
+        print(self.container.getServiceConfig())
+        func = getattr(self, command)
+        func()

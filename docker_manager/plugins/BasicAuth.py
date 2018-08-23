@@ -31,13 +31,13 @@ class BasicAuth(BasePlugin):
 
 
   # callable methods
-  def start(self, project, service):
+  def start(self):
     # should optimize and do that only on creation of the container
     #self.write()
     print('start basic auth plugin')
     pass
 
-  def destroy(self, project, service):
+  def destroy(self):
     #self.remove()
     print('stop basic auth plugin')
     pass

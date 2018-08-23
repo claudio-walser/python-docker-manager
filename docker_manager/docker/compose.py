@@ -3,8 +3,11 @@ import os
 from simpcli import Command as CliCommand
 
 from docker_manager.config import ComposeConfig
+from docker_manager.docker.container import Container
 
 from docker_manager.exceptions import NoDockerComposeFileException
+
+from pprint import pprint
 
 
 class Compose (object):
@@ -58,24 +61,24 @@ class Compose (object):
     output += self.start()
     return output
 
-  def predictName(self, serviceIndex, service, scale = 1):
+  def predictName(self, serviceName, service, scale = 1):
     projectName = self.name = os.path.basename(os.getcwd())
 
-    return '%s_%s_%i' % (projectName, serviceIndex, scale)
+    return '%s_%s_%i' % (projectName, serviceName, scale)
 
-  def getContainerNames(self):
+  def getContainers(self):
     config = self.composeConfig.get()
-    containerNames = []
+    containers = []
     if 'services' in config:
-      for serviceIndex in config['services']:
-        service = config['services'][serviceIndex]
-        if 'container_name' in service:
-          containerNames.append(service['container_name'])
+      for serviceName in config['services']:
+        serviceConfig = config['services'][serviceName]
+        if 'container_name' in serviceConfig:
+          containers.append(Container(serviceConfig['container_name'], serviceName, serviceConfig))
         else:
-          if 'scale' in service:
-            for scale in range(service['scale']):
+          if 'scale' in serviceConfig:
+            for scale in range(serviceConfig['scale']):
               scale += 1
-              containerNames.append(self.predictName(serviceIndex, service, scale))
+              containers.append(Container(self.predictName(serviceName, serviceConfig, scale), serviceName, serviceConfig))
           else:
-            containerNames.append(self.predictName(serviceIndex, service))
-    return containerNames
+            containers.append(Container(self.predictName(serviceName, serviceConfig), serviceName, serviceConfig))
+    return containers
