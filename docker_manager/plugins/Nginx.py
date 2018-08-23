@@ -1,8 +1,10 @@
 import os
-import Cli
-from docker_manager.plugins.AbstractPlugin import AbstractPlugin
+import simpcli
 
-class Nginx(AbstractPlugin):
+from docker_manager.plugins.abstract import BasePlugin
+
+
+class Nginx(BasePlugin):
 
   confd = '/etc/nginx/conf.d'
 
@@ -45,16 +47,18 @@ class Nginx(AbstractPlugin):
     self.reload()
 
   def reload(self):
-    command = Cli.Command()
+    command = simpcli.Command()
     command.execute("service nginx reload")
 
 
   # callable methods
-  def start(self):
+  def start(self, project, service):
     # should optimize and do that only on creation of the container
-    self.writeUpstreamConfig()
+    #self.writeUpstreamConfig()
+    print('start nginx plugin')
     pass
 
-  def destroy(self):
-    self.removeUpstreamConfig()
+  def destroy(self, project, service):
+    #self.removeUpstreamConfig()
+    print('destroy nginx plugin')
     pass

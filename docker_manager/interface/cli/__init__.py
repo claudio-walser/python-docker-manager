@@ -1,6 +1,9 @@
 import sys
 import simpcli
 
+from docker_manager.plugins.basicauth import BasicAuth
+from docker_manager.plugins.nginx import Nginx
+
 from docker_manager.interface.cli.abstract import BaseCommand
 from docker_manager.interface.cli.status import Status
 from docker_manager.interface.cli.start import Start
@@ -23,6 +26,11 @@ class Cli():
 
     interface = simpcli.Interface()
     command = simpcli.Command(True)
+
+    plugins = [
+        BasicAuth(),
+        Nginx()
+    ]
 
     commands = [
         "status",
@@ -96,6 +104,11 @@ class Cli():
                 extraCommandObject.run(project, service)
             except NoExtraCommandFoundException:
                 pass
+
+            for plugin in self.plugins:
+                if hasattr(plugin, command):
+                    func = getattr(plugin, command)
+                    func(project, service)
         # catch cli execution errors here
         except UnboundLocalError:
             pass
