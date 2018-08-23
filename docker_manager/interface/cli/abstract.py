@@ -22,7 +22,7 @@ class BaseCommand(object):
     def __init__(self):
         self.config.load()
         self.projects = Projects()
-        if self.projects.getAll() == {} and self.__class__.__name__ != 'Init':
+        if self.projects.getAll() == {} and self.__class__.__name__ != 'Init' and self.__class__.__name__ != 'ExtraCommand':
             self.interface.error('No projects found in your config')
             self.interface.writeOut('To add a project navigate into a directory with a docker-compose.yml and execute docker-manager init.')
             self.exit()
