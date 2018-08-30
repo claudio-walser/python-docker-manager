@@ -3,6 +3,7 @@ import sys
 
 from docker_manager.plugins.basicauth import BasicAuth
 from docker_manager.plugins.nginx import Nginx
+from docker_manager.plugins.hosts import Hosts
 
 from docker_manager.config import ManagerConfig
 from docker_manager.docker.projects import Projects
@@ -16,10 +17,7 @@ class BaseCommand(object):
     command = simpcli.Command(True)
     config = ManagerConfig()
     projects = None
-    plugins = [
-        BasicAuth(),
-        Nginx()
-    ]
+    plugins = None
 
     def __init__(self):
         self.config.load()
@@ -38,10 +36,18 @@ class BaseCommand(object):
 
     def runPlugins(self, project):
         print('Plugin Context')
-
-        command = self.__class__.__name__.lower()
-        project.changeWorkingDirectory()
-        compose = Compose()
-        for container in compose.getContainers():
-            for plugin in self.plugins:
-                plugin.run(command, container)
+        try: 
+            self.plugins = [
+                BasicAuth(),
+                Nginx(),
+                Hosts()
+            ]
+            command = self.__class__.__name__.lower()
+            project.changeWorkingDirectory()
+            compose = Compose()
+            for container in compose.getContainers():
+                for plugin in self.plugins:
+                    plugin.run(command, container)
+        except Exception as e:
+            self.interface.error('Plugin Exception')
+            self.interface.writeOut(e)

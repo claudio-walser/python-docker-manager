@@ -1,3 +1,5 @@
+from docker_manager.config import ComposeExtendedConfig
+from pprint import pprint
 
 class BasePlugin(object):
 
@@ -5,12 +7,15 @@ class BasePlugin(object):
   name = None
   settings = None
 
-  #def __init__(self, container):
+  #def __init__(self, container): 
   def run(self, command, container):
     if hasattr(self, command):
         self.container = container
-        print(self.container.getName())
-        print(self.container.getServiceName())
-        print(self.container.getServiceConfig())
+        self.config = ComposeExtendedConfig()
+        self.config.load()
+        pprint(self.config.get())
+        # print(self.container.getName())
+        # print(self.container.getServiceName())
+        # print(self.container.getServiceConfig())
         func = getattr(self, command)
         func()

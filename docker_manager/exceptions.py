@@ -20,3 +20,6 @@ class DockerManagerException(Exception):
 
 class NoExtraCommandFoundException(Exception):
 	pass
+
+class HostfileNotWritableException(Exception):
+	pass

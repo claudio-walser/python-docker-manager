@@ -1,5 +1,8 @@
 import os
 
+from docker_manager.exceptions import NoDockerComposeFileException
+
+
 class Project (object):
 
     name = None

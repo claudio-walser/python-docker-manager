@@ -1,9 +1,17 @@
 import re
-from docker_manager.plugins.AbstractPlugin import AbstractPlugin
+import os
 
-class Hosts(AbstractPlugin):
+from docker_manager.plugins.abstract import BasePlugin
 
-  hostsFile = '/etc/hosts'
+from docker_manager.exceptions import HostfileNotWritableException
+
+class Hosts(BasePlugin):
+
+  hostsFile = '/Users/walsercl/etc/hosts'
+
+  def __init__(self):
+    if not os.access(self.hostsFile, os.W_OK):
+      raise HostfileNotWritableException('Check that your hostsfile %s is writeable under your current user!' % (self.hostsFile))
 
   def add(self, ip, hostname):
     with open(self.hostsFile, 'r+') as f:
@@ -26,14 +34,29 @@ class Hosts(AbstractPlugin):
       f.truncate()
 
 
+  def hasConfig(self):
+    config = self.config.get()
+    if 'services' in config:
+      if self.container.getServiceName() in config['services']:
+        if 'hosts' in config['services'][self.container.getServiceName()]:
+          return True
+    return False
+
   # callable methods
   def start(self):
+    if not self.hasConfig():
+      return False
+
     self.add(self.container.getIpAddress(), self.container.getName())
-    pass
+    return True
 
   def stop(self):
+    print('Try at least')
+    if not self.hasConfig():
+      return False
+
     self.remove(self.container.getName())
-    pass
+    return True
 
   def restart(self):
     self.stop()
