@@ -26,3 +26,5 @@ class Stop(BaseCommand):
         if project.hasDockerSync():
             sync = Sync()
             sync.stop()
+
+        self.runPlugins(project)

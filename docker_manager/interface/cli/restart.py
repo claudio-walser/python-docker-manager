@@ -15,4 +15,5 @@ class Restart(BaseCommand):
         else:
             stopCommand.stop(project)
             startCommand.start(project)
+
         return True

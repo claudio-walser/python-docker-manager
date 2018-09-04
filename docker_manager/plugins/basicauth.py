@@ -39,5 +39,5 @@ class BasicAuth(BasePlugin):
 
   def destroy(self):
     #self.remove()
-    print('stop basic auth plugin')
+    print('destroy basic auth plugin')
     pass

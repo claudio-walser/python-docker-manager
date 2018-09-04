@@ -23,3 +23,5 @@ class Update(BaseCommand):
         compose = Compose()
         compose.pull()
         compose.start()
+
+        self.runPlugins(project)

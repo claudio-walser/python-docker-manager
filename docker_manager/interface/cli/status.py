@@ -35,3 +35,5 @@ class Status(BaseCommand):
             statusString += str(container.isCreated()).ljust(10)
             statusString += str(container.isRunning()).ljust(10)
             self.interface.writeOut(statusString)
+
+        self.runPlugins(project)

@@ -38,8 +38,8 @@ class BaseCommand(object):
         print('Plugin Context')
         try: 
             self.plugins = [
-                BasicAuth(),
-                Nginx(),
+                # BasicAuth(),
+                # Nginx(),
                 Hosts()
             ]
             command = self.__class__.__name__.lower()
@@ -47,6 +47,7 @@ class BaseCommand(object):
             compose = Compose()
             for container in compose.getContainers():
                 for plugin in self.plugins:
+                    print('Call %s on plugin %s' % (command, type(plugin)))
                     plugin.run(command, container)
         except Exception as e:
             self.interface.error('Plugin Exception')

@@ -7,7 +7,7 @@ from docker_manager.exceptions import HostfileNotWritableException
 
 class Hosts(BasePlugin):
 
-  hostsFile = '/Users/walsercl/etc/hosts'
+  hostsFile = '/etc/hosts'
 
   def __init__(self):
     if not os.access(self.hostsFile, os.W_OK):
@@ -34,28 +34,32 @@ class Hosts(BasePlugin):
       f.truncate()
 
 
-  def hasConfig(self):
+  def getConfig(self):
     config = self.config.get()
     if 'services' in config:
       if self.container.getServiceName() in config['services']:
         if 'hosts' in config['services'][self.container.getServiceName()]:
-          return True
+          aliases = config['services'][self.container.getServiceName()]['hosts']
+          aliases.append(self.container.getName())
+          return aliases
+
     return False
 
   # callable methods
   def start(self):
-    if not self.hasConfig():
+    aliases = self.getConfig()
+    if not aliases:
       return False
 
-    self.add(self.container.getIpAddress(), self.container.getName())
+    self.add(self.container.getIpAddress(), ' '.join(aliases))
     return True
 
   def stop(self):
-    print('Try at least')
-    if not self.hasConfig():
+    aliases = self.getConfig()
+    if not aliases:
       return False
 
-    self.remove(self.container.getName())
+    self.remove(' '.join(aliases))
     return True
 
   def restart(self):
