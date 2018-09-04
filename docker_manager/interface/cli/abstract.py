@@ -35,7 +35,7 @@ class BaseCommand(object):
         self.interface.writeOut('%s%s%s' % (self.interface.BOLD, string, self.interface.ENDC))
 
     def runPlugins(self, project):
-        print('Plugin Context')
+        self.interface.info('Running plugins')
         try: 
             self.plugins = [
                 # BasicAuth(),
@@ -45,9 +45,11 @@ class BaseCommand(object):
             command = self.__class__.__name__.lower()
             project.changeWorkingDirectory()
             compose = Compose()
-            for container in compose.getContainers():
-                for plugin in self.plugins:
-                    print('Call %s on plugin %s' % (command, type(plugin)))
+            for plugin in self.plugins:
+                self.interface.writeOut('')
+                self.bold(plugin.name)
+                for container in compose.getContainers():
+                    self.interface.writeOut(plugin.description % (container.getName()))
                     plugin.run(command, container)
         except Exception as e:
             self.interface.error('Plugin Exception')

@@ -8,6 +8,8 @@ from docker_manager.exceptions import HostfileNotWritableException
 class Hosts(BasePlugin):
 
   hostsFile = '/etc/hosts'
+  name = 'Hosts Plugin'
+  description = 'Writing hosts file for container %s'
 
   def __init__(self):
     if not os.access(self.hostsFile, os.W_OK):

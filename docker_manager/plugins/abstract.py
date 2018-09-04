@@ -13,7 +13,6 @@ class BasePlugin(object):
         self.container = container
         self.config = ComposeExtendedConfig()
         self.config.load()
-        pprint(self.config.get())
         # print(self.container.getName())
         # print(self.container.getServiceName())
         # print(self.container.getServiceConfig())
