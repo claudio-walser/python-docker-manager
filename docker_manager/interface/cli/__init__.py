@@ -2,6 +2,12 @@ import sys
 import simpcli
 
 from docker_manager.docker.projects import Projects
+from docker_manager.docker.project import Project
+from docker_manager.docker.compose import Compose
+
+from docker_manager.plugins.basicauth import BasicAuth
+from docker_manager.plugins.nginx import Nginx
+from docker_manager.plugins.hosts import Hosts
 
 from docker_manager.interface.cli.abstract import BaseCommand
 from docker_manager.interface.cli.status import Status as StatusCommand
@@ -29,7 +35,7 @@ class Cli():
     interface = simpcli.Interface()
     command = simpcli.Command(True)
     projects = Projects()
-
+    plugins = []
     commands = [
         "status",
         "start",
@@ -80,6 +86,9 @@ class Cli():
 
         raise CommandNotFoundException('Command "%s" not found!' % (command))
 
+    def bold(self, string):
+        self.interface.writeOut('%s%s%s' % (self.interface.BOLD, string, self.interface.ENDC))
+
     def dispatch(self, command: str, project: str, service: str):
         projects = []
 
@@ -97,10 +106,14 @@ class Cli():
             self.runCommand(command, project, service)
         else:
             for project in projects:
+                self.interface.writeOut('')
+                self.bold(project)
                 self.runCommand(command, project, service)
 
 
+
     def runCommand(self, command: str, project: str, service: str):
+        project = self.projects.getProject(project)
         extraCommandObject = ExtraCommand(command)
         try:
             commandObject = self.instantiateCommand(command)
@@ -122,6 +135,7 @@ class Cli():
 
         try:
             commandObject.run(project, service)
+            self.runPlugins(command, project)
             try:
                 # try running additional commands stored in projects
                 extraCommandObject.run(project, service)
@@ -143,6 +157,25 @@ class Cli():
 
             self.interface.error(format(e))
 
+    def runPlugins(self, command, project):
+        self.interface.info('Running plugins')
+        try:
+            self.plugins = [
+                # BasicAuth(),
+                # Nginx(),
+                Hosts()
+            ]
+            project.changeWorkingDirectory()
+            compose = Compose()
+            for plugin in self.plugins:
+                self.interface.writeOut('')
+                self.bold(plugin.name)
+                for container in compose.getContainers():
+                    self.interface.writeOut(plugin.description % (container.getName()))
+                    plugin.run(command, container)
+        except Exception as e:
+            self.interface.error('Plugin Exception')
+            self.interface.writeOut(e)
 
     def close(self, msg: str):
         self.interface.ok(msg)

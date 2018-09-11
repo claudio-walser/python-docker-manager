@@ -1,5 +1,7 @@
 import os
 
+from docker_manager.docker.project import Project
+
 from docker_manager.interface.cli.abstract import BaseCommand
 from docker_manager.exceptions import NoDockerComposeFileException
 from docker_manager.exceptions import ProjectNotFoundException
@@ -9,7 +11,7 @@ class Deinit(BaseCommand):
 
     runPerProject = False
 
-    def run(self, project: str, services: str) -> bool:
+    def run(self, project: Project, services: str) -> bool:
         currentFolder = os.getcwd()
         try:
             self.projects.remove(currentFolder)

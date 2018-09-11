@@ -2,6 +2,8 @@ import subprocess
 import os
 import glob
 
+from docker_manager.docker.project import Project
+
 from docker_manager.interface.cli.abstract import BaseCommand
 
 from docker_manager.exceptions import NoExtraCommandFoundException
@@ -16,16 +18,7 @@ class ExtraCommand(BaseCommand):
         self.commandStr = command
         super(ExtraCommand, self).__init__()
 
-    def run(self, project: str, services: str) -> bool:
-        if project == 'all-projects':
-            for project in self.projects.getAll():
-                self.extraCommand(project)
-        else:
-            self.extraCommand(project)
-        return True
-
-    def extraCommand(self, project: str):
-        project = self.projects.getProject(project)
+    def run(self, project: Project, services: str) -> bool:
         project.changeWorkingDirectory()
 
         files = glob.glob('%s/%s/%s*' % (os.getcwd(), self.extraCommandsDirectory, self.commandStr))
