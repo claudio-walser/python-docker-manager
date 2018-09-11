@@ -6,6 +6,9 @@ class ConfigException(Exception):
 class NoDockerComposeFileException(Exception):
     pass
 
+class CommandNotFoundException(Exception):
+	pass
+
 class NoProjectsFoundException(Exception):
     pass
 

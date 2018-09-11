@@ -18,6 +18,7 @@ class BaseCommand(object):
     config = ManagerConfig()
     projects = None
     plugins = None
+    runPerProject = True
 
     def __init__(self):
         self.config.load()
@@ -27,6 +28,9 @@ class BaseCommand(object):
             self.interface.error('No projects found in your config')
             self.interface.writeOut('To add a project navigate into a directory with a docker-compose.yml and execute docker-manager init.')
             self.exit()
+
+    def getRunPerProject(self):
+        return self.runPerProject
 
     def exit(self):
         sys.exit(1)

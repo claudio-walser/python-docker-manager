@@ -7,6 +7,8 @@ from docker_manager.exceptions import ProjectNotFoundException
 
 class Deinit(BaseCommand):
 
+    runPerProject = False
+
     def run(self, project: str, services: str) -> bool:
         currentFolder = os.getcwd()
         try:

@@ -7,6 +7,8 @@ from docker_manager.exceptions import ProjectAlreadyAddedException
 
 class Init(BaseCommand):
 
+    runPerProject = False
+
     def run(self, project: str, services: str) -> bool:
         currentFolder = os.getcwd()
         try:

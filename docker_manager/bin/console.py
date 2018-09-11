@@ -4,7 +4,10 @@ import sys
 import argcomplete
 import argparse
 
-from docker_manager.interface.cli import Cli
+from docker_manager.interface.cli import Cli as CliInterface
+
+from pprint import pprint
+
 
 if len(sys.argv) == 2:
     # default branch name is *
@@ -14,10 +17,11 @@ if len(sys.argv) == 3:
     # default branch name is *
     sys.argv.append('all-services')
 
-cli = Cli()
+cliInterface = CliInterface()
 
 # create parser in order to autocomplete
 parser = argparse.ArgumentParser()
+
 
 parser.add_argument(
     "command",
@@ -48,7 +52,7 @@ def main():
         command = arguments.command
         project = arguments.project
         services = arguments.services
-        cli.dispatch(command, project, services)
+        cliInterface.dispatch(command, project, services)
         sys.exit(0)
     except KeyboardInterrupt:
         cli.close("See you soon!")

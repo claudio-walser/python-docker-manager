@@ -11,11 +11,12 @@ class Hosts(BasePlugin):
   name = 'Hosts Plugin'
   description = 'Writing hosts file for container %s'
 
-  def __init__(self):
+  def checkFileAccess(self):
     if not os.access(self.hostsFile, os.W_OK):
       raise HostfileNotWritableException('Check that your hostsfile %s is writeable under your current user!' % (self.hostsFile))
 
   def add(self, ip, hostname):
+    self.checkFileAccess()
     with open(self.hostsFile, 'r+') as f:
       hostsfile = f.read()
       if hostsfile.find(hostname) is not -1:
@@ -27,6 +28,7 @@ class Hosts(BasePlugin):
       f.truncate()
 
   def remove(self, hostname):
+    self.checkFileAccess()
     with open(self.hostsFile, 'r+') as f:
       hostsfile = f.read()
       if hostsfile.find(hostname) is not -1:
@@ -36,7 +38,7 @@ class Hosts(BasePlugin):
       f.truncate()
 
 
-  def getConfig(self):
+  def getAliases(self):
     config = self.config.get()
     if 'services' in config:
       if self.container.getServiceName() in config['services']:
@@ -49,7 +51,7 @@ class Hosts(BasePlugin):
 
   # callable methods
   def start(self):
-    aliases = self.getConfig()
+    aliases = self.getAliases()
     if not aliases:
       return False
 
@@ -57,7 +59,7 @@ class Hosts(BasePlugin):
     return True
 
   def stop(self):
-    aliases = self.getConfig()
+    aliases = self.getAliases()
     if not aliases:
       return False
 
