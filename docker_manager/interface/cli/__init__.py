@@ -101,7 +101,7 @@ class Cli():
 
 
     def runCommand(self, command: str, project: str, service: str):
-        extraCommandObject = ExtraCommand(command)   
+        extraCommandObject = ExtraCommand(command)
         try:
             commandObject = self.instantiateCommand(command)
         except CommandNotFoundException:

@@ -26,5 +26,3 @@ class Destroy(BaseCommand):
         if project.hasDockerSync():
             sync = Sync()
             sync.destroy()
-
-        self.runPlugins(project)

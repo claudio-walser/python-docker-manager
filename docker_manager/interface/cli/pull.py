@@ -20,5 +20,3 @@ class Pull(BaseCommand):
         project.changeWorkingDirectory()
         compose = Compose()
         compose.pull()
-
-        self.runPlugins(project)
