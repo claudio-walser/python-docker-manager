@@ -1,5 +1,5 @@
 from docker_manager.config import ComposeExtendedConfig
-from pprint import pprint
+
 
 class BasePlugin(object):
 

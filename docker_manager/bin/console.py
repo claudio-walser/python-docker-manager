@@ -6,8 +6,6 @@ import argparse
 
 from docker_manager.interface.cli import Cli as CliInterface
 
-from pprint import pprint
-
 
 if len(sys.argv) == 2:
     # default branch name is *

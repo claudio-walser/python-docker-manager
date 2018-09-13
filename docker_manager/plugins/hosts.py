@@ -44,7 +44,6 @@ class Hosts(BasePlugin):
       f.truncate()
       return message
 
-
   def getAliases(self):
     config = self.config.get()
     if 'services' in config:
@@ -55,6 +54,7 @@ class Hosts(BasePlugin):
           return aliases
 
     return []
+
 
   # callable methods
   def start(self):

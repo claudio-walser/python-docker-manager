@@ -1,5 +1,5 @@
 Todo
 
-- Implement plugins
+- -Implement plugins-
 - -Implement extra commands-
 - -Implement extra executions by command-

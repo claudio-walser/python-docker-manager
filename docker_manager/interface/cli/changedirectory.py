@@ -5,8 +5,6 @@ from docker_manager.docker.project import Project
 
 from docker_manager.interface.cli.abstract import BaseCommand
 
-from pprint import pprint
-
 
 class ChangeDirectory(BaseCommand):
 

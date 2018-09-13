@@ -28,8 +28,6 @@ from docker_manager.exceptions import DockerManagerException
 from docker_manager.exceptions import CommandNotFoundException
 from docker_manager.exceptions import NoExtraCommandFoundException
 
-from pprint import pprint
-
 
 class Cli():
 

@@ -6,8 +6,6 @@ from docker_manager.exceptions import NoDockerComposeFileException
 from docker_manager.exceptions import ProjectAlreadyAddedException
 from docker_manager.exceptions import ProjectNotFoundException
 
-from pprint import pprint
-
 
 class Yaml:
 
@@ -85,12 +83,5 @@ class ManagerConfig(BaseConfig):
 class ComposeConfig(BaseConfig):
     filename = './docker-compose.yml'
 
-    def debug(self):
-        pprint(self.yaml)
-
-
 class ComposeExtendedConfig(BaseConfig):
     filename = './docker-manager.yml'
-
-    def debug(self):
-        pprint(self.yaml)
