@@ -11,7 +11,7 @@ class Restart(BaseCommand):
         startCommand = Start()
         stopCommand = Stop()
 
-        stopCommand.stop(project, services)
-        startCommand.start(project, services)
+        stopCommand.run(project, services)
+        startCommand.run(project, services)
 
         return True

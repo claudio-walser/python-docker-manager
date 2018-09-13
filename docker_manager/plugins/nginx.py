@@ -1,7 +1,7 @@
 import os
 import simpcli
 
-from docker_manager.plugins.abstract import BasePlugin
+from docker_manager.plugins import BasePlugin
 
 
 class Nginx(BasePlugin):

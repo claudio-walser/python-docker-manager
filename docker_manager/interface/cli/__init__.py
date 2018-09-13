@@ -1,5 +1,6 @@
 import sys
 import simpcli
+import traceback
 
 from docker_manager.docker.projects import Projects
 from docker_manager.docker.project import Project
@@ -158,24 +159,30 @@ class Cli():
             self.interface.error(format(e))
 
     def runPlugins(self, command, project):
-        self.interface.info('Running plugins')
         try:
             self.plugins = [
                 # BasicAuth(),
                 # Nginx(),
                 Hosts()
             ]
+
             project.changeWorkingDirectory()
             compose = Compose()
             for plugin in self.plugins:
+                if not hasattr(plugin, command):
+                    continue
+
                 self.interface.writeOut('')
-                self.bold(plugin.name)
+                self.interface.info('Running %s' % (plugin.name))
+
                 for container in compose.getContainers():
-                    self.interface.writeOut(plugin.description % (container.getName()))
-                    plugin.run(command, container)
+                    success, message = plugin.run(command, container)
+                    if message:
+                        self.interface.writeOut(message)
         except Exception as e:
             self.interface.error('Plugin Exception')
             self.interface.writeOut(e)
+            self.interface.writeOut(traceback.format_exc())
 
     def close(self, msg: str):
         self.interface.ok(msg)

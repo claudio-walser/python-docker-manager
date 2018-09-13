@@ -1,81 +1,83 @@
 import re
 import os
 
-from docker_manager.plugins.abstract import BasePlugin
+from docker_manager.plugins import BasePlugin
 
 from docker_manager.exceptions import HostfileNotWritableException
+
 
 class Hosts(BasePlugin):
 
   hostsFile = '/etc/hosts'
   name = 'Hosts Plugin'
-  description = 'Writing hosts file for container %s'
 
   def checkFileAccess(self):
     if not os.access(self.hostsFile, os.W_OK):
       raise HostfileNotWritableException('Check that your hostsfile %s is writeable under your current user!' % (self.hostsFile))
 
   def add(self, ip, hostname):
+    message = 'Nothing to do'
     self.checkFileAccess()
     with open(self.hostsFile, 'r+') as f:
       hostsfile = f.read()
       if hostsfile.find(hostname) is not -1:
         hostsfile = re.sub(r"\n(.*)    %s\n" % hostname, "\n%s    %s\n" % (ip, hostname), hostsfile)
+        message = 'Update hosts file:  %s' % (hostname)
       else:
         hostsfile += "%s    %s\n" % (ip, hostname)
+        message = 'Add to hosts file:  %s' % (hostname)
       f.seek(0)
       f.write(hostsfile)
       f.truncate()
+      return message
 
   def remove(self, hostname):
+    message = 'Nothing to do'
     self.checkFileAccess()
     with open(self.hostsFile, 'r+') as f:
       hostsfile = f.read()
       if hostsfile.find(hostname) is not -1:
         hostsfile = re.sub(r"\n(.*)    %s\n" % hostname, "\n", hostsfile)
+        message = 'Remove from hosts file:  %s' % (hostname)
       f.seek(0)
       f.write(hostsfile)
       f.truncate()
+      return message
 
 
   def getAliases(self):
     config = self.config.get()
     if 'services' in config:
       if self.container.getServiceName() in config['services']:
-        if 'hosts' in config['services'][self.container.getServiceName()]:
+        if config['services'][self.container.getServiceName()] and 'hosts' in config['services'][self.container.getServiceName()]:
           aliases = config['services'][self.container.getServiceName()]['hosts']
           aliases.append(self.container.getName())
           return aliases
 
-    return False
+    return []
 
   # callable methods
   def start(self):
     aliases = self.getAliases()
     if not aliases:
-      return False
+      return False, ''
 
-    self.add(self.container.getIpAddress(), ' '.join(aliases))
-    return True
+    message = self.add(self.container.getIpAddress(), ' '.join(aliases))
+    return True, message
 
   def stop(self):
     aliases = self.getAliases()
     if not aliases:
-      return False
+      return False, ''
 
-    self.remove(' '.join(aliases))
-    return True
+    message = self.remove(' '.join(aliases))
+    return True, message
 
   def restart(self):
-    self.stop()
-    self.start()
-    pass
+    return self.start()
 
   def destroy(self):
-    self.stop()
-    pass
+    return self.stop()
 
   def update(self):
-    self.stop()
-    self.start()
-    pass
+    return self.start()
