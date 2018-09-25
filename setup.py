@@ -2,16 +2,16 @@
 
 from setuptools import setup, find_packages
 
-def read(fpath):
-    with open(fpath, 'r') as f:
+def read(file):
+    with open(file, 'r') as f:
         return f.read()
 
-def version(fpath):
-    return read(fpath).strip()
+def version(file):
+    return read(file).strip()
 
 setup(
     name='docker-manager',
-    version=version(),
+    version=version('version.txt'),
     description='Extending docker-compose with tools for networking and nginx proxy config.',
     long_description=read('README.rst'),
     author='Claudio Walser',
